@@ -59,14 +59,18 @@
         <div class="row justify-content-center">
             <div class="col-lg-6 col-md-12" id="first-row">
                 <h3>Hello Admin</h3>
-                <div class="form-group"> <label class="form-control-label text-muted">Admin ID</label> <input
-                        type="text" id="admin ID" name="admin ID" placeholder="Admin ID" class="form-control"> </div>
-                <div class="form-group"> <label class="form-control-label text-muted">Password</label> <input
-                        type="password" id="psw" name="psw" placeholder="Password" class="form-control"> </div>
-                <div class="row justify-content-center my-3 px-3"> <button class="btn-block btn-color">Login to
-                        FST</button> </div>
-                <div class="row justify-content-center my-2"> <a href="/adminReg"><small class="text-muted">New
-                            Admin, click here to register</small></a> </div>
+                <form action="/admin" method="POST">
+                    <div class="form-group"> <label class="form-control-label text-muted">Admin ID</label> <input
+                            type="text" id="admin ID" name="adminId" placeholder="Admin ID" class="form-control">
+                    </div>
+                    <div class="form-group"> <label class="form-control-label text-muted">Password</label> <input
+                            type="password" id="psw" name="password" placeholder="Password" class="form-control">
+                        <small style="color: brown;">{{message}}</small> </div>
+                    <div class="row justify-content-center my-3 px-3"> <button class="btn-block btn-color">Login to
+                            FST</button> </div>
+                    <div class="row justify-content-center my-2"> <a href="/adminReg"><small class="text-muted">New
+                                Admin, click here to register</small></a> </div>
+                </form>
             </div>
 
 
