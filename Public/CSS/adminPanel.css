@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+body {
+    background: #d6e6f2;
+    ;
+    overflow-x: hidden;
+    padding-top: 70px;
+}
+
+.card-body {
+    background: #303841;
+    box-shadow: 0px 4px 3px rgba(0, 0, 0, 0.4), 0px 8px 13px rgba(0, 0, 0, 0.4), 0px 18px 23px rgba(0, 0, 0, 0.4);
+    color: wheat;
+}
+
+navbar-toggler {
+    background: red;
+}
+
+button {
+    margin: 1em;
+}
+
+html {
+    height: 100%;
+}
+
+.container-fluid {
+    padding-top: 3em;
+}
+
+.card {
+    margin-top: 2em;
+}
+
+ul {
+    list-style-type: none;
+}
+
+li {
+    text-align: start;
+}
+
+.navbar {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.nav-link {
+    color: #251f44;
+    letter-spacing: 2px;
+    font-weight: 700;
+    margin: 0px 2em 0px 2em;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.light-blue-skin .navbar.double-nav a {
+    color: black !important;
+}
+
+.footer {
+    position: relative;
+    bottom: 0;
+    margin-top: 20%;
+    flex-shrink: 0;
+    width: 100vw;
+    background-color: #dbe2ef;
+    background: #16213e;
+    text-align: start;
+    padding: 1rem 0rem;
+}
+
+img {
+    height: 50%;
+    width: 50%;
+    margin-bottom: 5em;
+}
+
+#footer-data {
+    color: wheat;
+    margin-top: 1em;
+    text-align: center;
+    font-size: 1em;
+}
+
+#footer-content {
+    color: wheat;
+    font-size: 1.2em;
+}
+
+a {
+    color: wheat;
+}
+
+a:hover {
+    color: #ade498;
+    text-decoration: none;
+}
+
+@media (max-width: 1220px) {
+    #second-row {
+        display: none;
+    }
+}
+
+@media (max-width: 588px) {
+    .container {
+        height: 100vh;
+        width: 90vw;
+    }
+}
+
+@media (max-width: 990px) {
+    li {
+        text-align: center;
+    }
+    img {
+        height: 10%;
+        width: 20%;
+        margin-bottom: 10px;
+    }
+    td {
+        font-size: 1em;
+        margin: 0px;
+    }
+    .footer {
+        margin-bottom: 0px;
+    }
+}
+
+@media (max-width: 770px) {
+    .navbar {
+        background: rgba(0, 0, 0, 0.8);
+    }
+    .nav-link {
+        color: white;
+    }
+}

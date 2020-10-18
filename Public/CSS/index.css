@@ -2,6 +2,7 @@
 body {
     background: #ade498;
     overflow-x: hidden;
+    padding-top: 70px;
 }
 
 navbar-toggler {
@@ -115,8 +116,15 @@ button:focus {
 }
 
 .footer {
-    padding: 2em;
+    position: relative;
+    bottom: 0;
+    margin-top: 20%;
+    flex-shrink: 0;
+    width: 100vw;
+    background-color: #dbe2ef;
     background: #16213e;
+    text-align: start;
+    padding: 1rem 0rem;
 }
 
 img {
