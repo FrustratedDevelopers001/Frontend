@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+body {
+    background: #d6e6f2;
+    overflow-x: hidden;
+}
+
+html {
+    height: 100%;
+}
+
+.navbar {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.nav-link {
+    color: #251f44;
+    letter-spacing: 2px;
+    font-weight: 700;
+    margin: 0px 2em 0px 2em;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.light-blue-skin .navbar.double-nav a {
+    color: black !important;
+}
+
+label {
+    color: wheat;
+}
+
+.container {
+    background: #303841;
+    margin-top: 10%;
+    height: 40em;
+    width: 100em;
+    padding-top: 5em;
+    margin-bottom: 10%;
+    box-shadow: 0px 4px 3px rgba(0, 0, 0, 0.4), 0px 8px 13px rgba(0, 0, 0, 0.4), 0px 18px 23px rgba(0, 0, 0, 0.4);
+}
+
+.footer {
+    padding: 2em;
+    background: #16213e;
+}
+
+img {
+    height: 50%;
+    width: 50%;
+    margin-bottom: 5em;
+}
+
+#footer-data {
+    color: wheat;
+    margin-top: 1em;
+    text-align: center;
+    font-size: 1em;
+}
+
+#footer-content {
+    color: wheat;
+    font-size: 1.2em;
+}
+
+.btn-white:hover {
+    color: #fff;
+    background-image: linear-gradient(to right, #ffd54f, #d500f9);
+}
+
+a {
+    color: wheat;
+}
+
+a:hover {
+    color: #ade498;
+    text-decoration: none;
+}
+
+@media (max-width: 1220px) {
+    #second-row {
+        display: none;
+    }
+}
+
+@media (max-width: 588px) {
+    .container {
+        height: 100vh;
+        width: 90vw;
+    }
+}
+
+@media (max-width: 900px) {
+    li {
+        text-align: center;
+    }
+}
+
+@media (max-width: 770px) {
+    .navbar {
+        background: rgba(0, 0, 0, 0.8);
+    }
+    .nav-link {
+        color: white;
+    }
+}
