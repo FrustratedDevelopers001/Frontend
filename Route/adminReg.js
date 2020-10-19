@@ -5,10 +5,11 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const Admin = require("../models/adminModel")
 router.get("/adminReg", (req, res) => {
-    res.render("adminReg", {
-        message: ""
+        res.render("adminReg", {
+            message: ""
+        })
     })
-})
+    // Error handled
 router.post("/adminReg", async(req, res) => {
     const name = req.body.name
     const email = req.body.email
