@@ -1,7 +1,5 @@
 require('dotenv').config()
-const path = require('path')
 const express = require("express")
-const hbs = require('hbs')
 const ejs = require("ejs")
 const app = express();
 const bodyParser = require("body-parser")
@@ -12,13 +10,11 @@ const adminReg = require("./Route/adminReg")
 const notice = require("./Route/noticeRoute")
 const notices = require("./Route/notice")
 const port = process.env.PORT || 3000
-
 app.set('view engine', 'ejs')
 app.use(express.static("Public"))
 app.use(bodyParser.urlencoded({
     extended: true
 }))
-
 
 app.use(homeRoute)
 app.use(adminRoute)

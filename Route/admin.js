@@ -10,27 +10,27 @@ router.get("/admin", (req, res) => {
     })
 })
 
-router.post("/admin", (req, res) => {
+router.post("/admin", async(req, res) => {
     const adminID = req.body.adminId
     const password = req.body.password
 
-    // console.log(password)
+
     if (!adminID || !password) {
         res.render("admin", {
             message: "*Missing parameters"
         })
     }
-    const findUser = async(id) => {
-        const admin = await Admin.findOne({ email: id })
-        return admin
-    }
-    findUser(adminID).then((adminData) => {
+    try {
+        const adminData = await Admin.findByCredentials(adminID, password)
         res.render("adminPanel", {
             name: adminData.name
         })
-    }).catch((e) => {
-        console.log(e)
-    })
+
+    } catch (error) {
+        res.render("admin", {
+            message: error
+        })
+    }
 
 })
 router.post("/admin/faculty/add", (req, res) => {

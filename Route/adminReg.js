@@ -32,7 +32,7 @@ router.post("/adminReg", async(req, res) => {
                     })
 
                 } catch (error) {
-                    res.send("Error")
+                    console.log(error)
                 }
 
             } else {

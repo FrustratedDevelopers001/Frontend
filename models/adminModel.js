@@ -1,11 +1,53 @@
+require("dotenv").config();
 const mongoose = require("mongoose")
-
+const bcrypt = require("bcryptjs")
+const validator = require("validator")
 
 const adminSchema = new mongoose.Schema({
-    email: String,
-    password: String,
-    name: String
+    email: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+        lowercase: true,
+        validator(value) {
+            if (!validator.isEmail(value)) {
+                throw new Error("Invalid Email")
+            }
+        }
+    },
+    password: {
+        type: String,
+        required: true,
 
+    },
+    name: {
+        type: String,
+        required: true,
+        trim: true
+    }
+
+})
+
+adminSchema.statics.findByCredentials = async(email, password) => {
+    const admin = await Admin.findOne({ email })
+    if (!admin) throw new Error("User doesn't exists")
+
+    const match = await bcrypt.compare(password, admin.password)
+
+    if (!match) throw new Error("Invlaid Password")
+
+    return admin
+
+}
+
+
+adminSchema.pre("save", async function(next) {
+    const admin = this
+    if (admin.isModified("password")) {
+        admin.password = await bcrypt.hash(admin.password, 8)
+    }
+    next()
 })
 
 const Admin = new mongoose.model("Admin", adminSchema)
