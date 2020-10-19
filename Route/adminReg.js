@@ -5,7 +5,9 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const Admin = require("../models/adminModel")
 router.get("/adminReg", (req, res) => {
-    res.render("adminReg")
+    res.render("adminReg", {
+        message: ""
+    })
 })
 router.post("/adminReg", (req, res) => {
     bcrypt.hash(process.env.TEXT, saltRounds, function(err, hash) {

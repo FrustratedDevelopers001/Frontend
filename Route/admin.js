@@ -1,3 +1,4 @@
+require("dotenv").config()
 const express = require("express")
 const bcrypt = require("bcrypt")
 const router = new express.Router()
@@ -25,12 +26,15 @@ router.post("/admin", (req, res) => {
                 message: "User not found"
             })
         } else {
-            bcrypt.hash(password, foundAdmin.password, function(err, result) {
-                if (result) res.render("adminPanel", {
+            bcrypt.compare(password, process.env.TEXT, function(err, result) {
+                // console.log(password)
+                // console.log(foundAdmin.password)
+                // console.log(err)
+                if (password != foundAdmin.password) res.render("adminPanel", {
                     name: foundAdmin.name
                 })
                 else res.render("admin", {
-                    module: "Invalid Password"
+                    message: "Invalid Password"
                 })
             });
         }
