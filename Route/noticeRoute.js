@@ -21,7 +21,7 @@ router.get("/notice", (req, res) => {
     })
 
 })
-router.post("/addNotice", (req, res) => {
+router.post("/addNotice", async(req, res) => {
     const title = req.body.title
     const notice = req.body.notice
     if (!title || !notice) {
@@ -33,11 +33,15 @@ router.post("/addNotice", (req, res) => {
             title: title,
             body: notice
         })
-        noticeData.save().then(() => {
+        try {
+            await noticeData.save()
             res.render("adminPanel", {
                 name: ""
             })
-        }).catch()
+        } catch (error) {
+            res.send("Error")
+        }
+
 
     }
 

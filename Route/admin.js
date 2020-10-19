@@ -10,35 +10,28 @@ router.get("/admin", (req, res) => {
     })
 })
 
-router.post("/admin", (req, res) => {
+router.post("/admin", async(req, res) => {
     const adminID = req.body.adminId
     const password = req.body.password
 
-    // console.log(password)
+
     if (!adminID || !password) {
         res.render("admin", {
             message: "*Missing parameters"
         })
     }
-    Admin.findOne({ email: adminID }, (err, foundAdmin) => {
-        if (!foundAdmin) {
-            res.render("admin", {
-                message: "User not found"
-            })
-        } else {
-            bcrypt.compare(password, process.env.TEXT, function(err, result) {
-                // console.log(password)
-                // console.log(foundAdmin.password)
-                // console.log(err)
-                if (password != foundAdmin.password) res.render("adminPanel", {
-                    name: foundAdmin.name
-                })
-                else res.render("admin", {
-                    message: "Invalid Password"
-                })
-            });
-        }
-    })
+    try {
+        const adminData = await Admin.findByCredentials(adminID, password)
+        res.render("adminPanel", {
+            name: adminData.name
+        })
+
+    } catch (error) {
+        res.render("admin", {
+            message: error
+        })
+    }
+
 })
 router.post("/admin/faculty/add", (req, res) => {
     res.send("Will add faculty")

@@ -2,15 +2,17 @@ const expres = require("express")
 const router = new expres.Router()
 const noticeData = require("../models/noticeModel")
 
-router.get("/notice/:noticeName", (req, res) => {
+router.get("/notice/:noticeName", async(req, res) => {
     const par = req.params.noticeName.toLowerCase();
-    noticeData.findOne({ "title": req.params.noticeName }, (err, data) => {
+    try {
+        const data = await noticeData.findOne({ "title": req.params.noticeName })
+
         var title = data.title.toLowerCase();
         if (title === par) res.render("post", data);
+    } catch (error) {
+        res.send(error)
 
-    })
-
-
+    }
 })
 
 module.exports = router
