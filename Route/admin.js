@@ -20,25 +20,18 @@ router.post("/admin", (req, res) => {
             message: "*Missing parameters"
         })
     }
-    Admin.findOne({ email: adminID }, (err, foundAdmin) => {
-        if (!foundAdmin) {
-            res.render("admin", {
-                message: "User not found"
-            })
-        } else {
-            bcrypt.compare(password, process.env.TEXT, function(err, result) {
-                // console.log(password)
-                // console.log(foundAdmin.password)
-                // console.log(err)
-                if (password != foundAdmin.password) res.render("adminPanel", {
-                    name: foundAdmin.name
-                })
-                else res.render("admin", {
-                    message: "Invalid Password"
-                })
-            });
-        }
+    const findUser = async(id) => {
+        const admin = await Admin.findOne({ email: id })
+        return admin
+    }
+    findUser(adminID).then((adminData) => {
+        res.render("adminPanel", {
+            name: adminData.name
+        })
+    }).catch((e) => {
+        console.log(e)
     })
+
 })
 router.post("/admin/faculty/add", (req, res) => {
     res.send("Will add faculty")
