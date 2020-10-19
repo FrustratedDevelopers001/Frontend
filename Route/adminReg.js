@@ -15,37 +15,37 @@ router.post("/adminReg", async(req, res) => {
     const secretCode = req.body.secretCode
     const password = req.body.password
     const cpassword = req.body.cpassword
-    if (!email || !secretCode || !password || !password || !name) {
-        res.send("Missing Data")
-    } else {
-        if (secretCode == process.env.SECRET) {
-            if (password === cpassword) {
-                const admin = new Admin({
-                    name: name,
-                    email: email,
-                    password: password
+
+    if (secretCode == process.env.SECRET) {
+        if (password === cpassword) {
+            const admin = new Admin({
+                name: name,
+                email: email,
+                password: password
+            })
+            try {
+                await admin.save()
+                res.render("adminPanel", {
+                    name: name
                 })
-                try {
-                    await admin.save()
-                    res.render("adminPanel", {
-                        name: name
-                    })
 
-                } catch (error) {
-                    console.log(error)
-                }
-
-            } else {
+            } catch (error) {
                 res.render("adminReg", {
-                    message: "Password do not match"
+                    message: error
                 })
             }
+
         } else {
             res.render("adminReg", {
-                message: "Invalid Secret Code"
+                message: "Password do not match"
             })
         }
+    } else {
+        res.render("adminReg", {
+            message: "Invalid Secret Code"
+        })
     }
+
 
 
 
