@@ -4,6 +4,10 @@ const bcrypt = require("bcrypt")
 const router = new express.Router()
 const Notice = require("../models/noticeModel")
 const Admin = require("../models/adminModel")
+var nametobeSent = ""
+const getName = (name) => {
+    nametobeSent = name
+}
 router.get("/admin", (req, res) => {
     res.render("admin", {
         message: ""
@@ -22,9 +26,8 @@ router.post("/admin", async(req, res) => {
     }
     try {
         const adminData = await Admin.findByCredentials(adminID, password)
-        res.render("adminPanel", {
-            name: adminData.name
-        })
+        getName(adminData.name)
+        res.redirect("admin/adminPanel")
 
     } catch (error) {
         res.render("admin", {
@@ -33,24 +36,16 @@ router.post("/admin", async(req, res) => {
     }
 
 })
-router.post("/admin/faculty/add", (req, res) => {
-    res.send("Will add faculty")
+router.get("/admin/adminPanel", async(req, res) => {
+    res.render("adminPanel", {
+        name: nametobeSent
+    })
 })
-router.post("/admin/faculty/update", (req, res) => {
-    res.send("Will update faculty")
+router.get("/admin/faculty/add", async(req, res) => {
+    res.send("faculty add hogi ab")
 })
-router.post("/admin/faculty/attendance", (req, res) => {
-    res.send("Will remove faculty")
+router.get("/admin/student/add", async(req, res) => {
+    res.send("ab students add honge")
 })
-router.post("/admin/student/add", (req, res) => {
-    res.send("Will add student")
-})
-router.post("/admin/student/update", (req, res) => {
-    res.send("Will update studnet")
-})
-router.post("/admin/student/attendance", (req, res) => {
-    res.send("Attendance")
-})
-
 
 module.exports = router

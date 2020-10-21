@@ -1,8 +1,7 @@
 require("dotenv").config()
 const express = require("express")
 const router = new express.Router()
-const bcrypt = require('bcrypt');
-const saltRounds = 10;
+
 const Admin = require("../models/adminModel")
 router.get("/adminReg", (req, res) => {
         res.render("adminReg", {
@@ -26,13 +25,12 @@ router.post("/adminReg", async(req, res) => {
             })
             try {
                 await admin.save()
-                res.render("adminPanel", {
-                    name: name
-                })
+                res.redirect("admin/adminPanel")
 
             } catch (error) {
+                console.log(error)
                 res.render("adminReg", {
-                    message: error
+                    message: "Account already Exist"
                 })
             }
 
