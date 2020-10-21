@@ -8,10 +8,13 @@ const adminRoute = require("./Route/admin")
 const forgotpassword = require("./Route/forgotpassword")
 const adminReg = require("./Route/adminReg")
 const notice = require("./Route/noticeRoute")
-const notices = require("./Route/notice")
+const notices = require("./Route/notice");
+const router = require('./Route/adminReg');
 const port = process.env.PORT || 3000
 app.set('view engine', 'ejs')
-app.use(express.static("Public"))
+
+app.use(express.static(`Public`))
+
 app.use(bodyParser.urlencoded({
     extended: true
 }))
