@@ -119,7 +119,6 @@ router.post("/admin/student/add", async(req, res) => {
             subject: `${student.department} deparartment registration`,
 
             html: `<body>
-
             <h2>Your registration for ${student.academicSession} is sucssfull</h1>
             <div>
             
