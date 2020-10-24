@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt")
 const router = new express.Router()
 const Notice = require("../models/noticeModel")
 const Admin = require("../models/adminModel")
+const Student = require("../models/studentModel")
 var nametobeSent = ""
 const getName = (name) => {
     nametobeSent = name
@@ -45,7 +46,60 @@ router.get("/admin/faculty/add", async(req, res) => {
     res.send("faculty add hogi ab")
 })
 router.get("/admin/student/add", async(req, res) => {
-    res.send("ab students add honge")
+    res.render("AddStudent", {
+        message: ""
+    })
+})
+router.post("/admin/student/add", async(req, res) => {
+    const student = new Student({
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        enrollment: req.body.enrollment,
+        fatherName: req.body.fatherName,
+        academicSession: req.body.academicSession,
+        password: req.body.password,
+        studentContact: req.body.studentContact,
+        studentEmail: req.body.studentEmail,
+        department: req.body.department,
+        subjects: [{
+                subject: req.body.sb1,
+                section: req.body.sc1
+            },
+            {
+                subject: req.body.sb2,
+                section: req.body.sc2
+            },
+            {
+                subject: req.body.sb3,
+                section: req.body.sc3
+            },
+            {
+                subject: req.body.sb4,
+                section: req.body.sc4
+            },
+            {
+                subject: req.body.sb5,
+                section: req.body.sc5
+            },
+            {
+                subject: req.body.sb6,
+                section: req.body.sc6
+            },
+
+
+        ]
+
+
+    })
+    try {
+        await student.save()
+        res.redirect("/admin/adminPanel")
+    } catch (error) {
+        res.render("AddStudent", {
+            message: "Student already added"
+        })
+    }
+
 })
 
 module.exports = router
