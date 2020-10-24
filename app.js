@@ -10,6 +10,7 @@ const adminReg = require("./Route/adminReg")
 const notice = require("./Route/noticeRoute")
 const notices = require("./Route/notice");
 const router = require('./Route/adminReg');
+const studentRoute = require("./Route/student")
 const port = process.env.PORT || 3000
 app.set('view engine', 'ejs')
 
@@ -24,6 +25,7 @@ app.use(adminRoute)
 app.use(forgotpassword)
 app.use(adminReg)
 app.use(notice)
+app.use(studentRoute)
 app.use(notices)
 require("./models/mongo")
 
