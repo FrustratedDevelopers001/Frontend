@@ -7,14 +7,10 @@ const Admin = require("../models/adminModel")
 const Student = require("../models/studentModel")
 const auth = require("../middleware/auth")
 const { get } = require("mongoose")
-var nametobeSent = ""
-const checkData = (email,password)=>{
-    emailtobeSent = email
-    passwordtobeSent = password
-}
-const getName = (name) => {
-    nametobeSent = name
-}
+
+var activeId = ""
+var activePassword = ""
+var activeName = ""
 const transporter = nodeMailer.createTransport({
     service: 'gmail',
     auth: {
@@ -40,7 +36,9 @@ router.post("/admin/signUp", async(req,res)=>{
     const secretCode = req.body.secretCode
     const password = req.body.password
     const cpassword = req.body.cpassword
-
+    activeName = name
+    activeId = email,
+    activePassword = password
     if (secretCode == process.env.SECRET) {
         if (password === cpassword) {
             const admin = new Admin({
@@ -51,7 +49,7 @@ router.post("/admin/signUp", async(req,res)=>{
             try {
                 await admin.save()
                 const token = await admin.generateAuthToken()        
-                res.redirect('/admin/adminPanel/?token='+token+'/?name='+getName(name))
+                res.redirect('/admin/adminPanel/?token='+token)
 
             } catch (error) {
                 console.log(error)
@@ -74,10 +72,13 @@ router.post("/admin/signUp", async(req,res)=>{
 
 })
 router.post("/admin" ,async(req, res) => {
+ 
     const adminID = req.body.adminId
     const password = req.body.password
-    checkData(adminID,password)
+    activeId = adminID,
+    activePassword = password
     const admin = await Admin.findByCredentials(adminID,password)
+    activeName = admin.name
     const token = await admin.generateAuthToken()
     
     if (!adminID || !password) {
@@ -87,7 +88,7 @@ router.post("/admin" ,async(req, res) => {
     }
     try {
         
-        getName(admin.name)
+        
         res.redirect("/admin/adminPanel/?token="+token);
 
     } catch (error) {
@@ -100,7 +101,7 @@ router.post("/admin" ,async(req, res) => {
 router.get("/admin/adminPanel",auth ,async(req, res) => {
    
     res.render(`adminPanel`, {
-        name: nametobeSent
+        name: activeName
         
     })
 })
@@ -114,10 +115,7 @@ router.get("/admin/student/add", async(req, res) => {
     })
 })
 router.post("/admin/student/add", async(req, res) => {
-    // const adminID = req.body.email
-    // const password = req.body.password
-    // const admin = await Admin.findByCredentials(adminID,password)
-    // const token = await admin.generateAuthToken()
+    
     const student = new Student({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -158,14 +156,15 @@ router.post("/admin/student/add", async(req, res) => {
 
 
     })
+    
     try {
-        await student.save()
-        res.send("Student Added")
+        const admin = await Admin.findByCredentials(activeId,activePassword)
+        const token = await admin.generateAuthToken()
+        await student.save()        
+        res.redirect("/admin/adminPanel/?token="+token);
     } catch (error) {
         console.log(error)
-        res.render("AddStudent", {
-            message: "*Student already added"
-        })
+        
     }
     try {
         const info = await transporter.sendMail({
