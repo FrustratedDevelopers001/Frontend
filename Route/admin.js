@@ -7,11 +7,10 @@ const Admin = require("../models/adminModel")
 const Student = require("../models/studentModel")
 const auth = require("../middleware/auth")
 const { get } = require("mongoose")
-var nametobeSent = ""
 
-const getName = (name) => {
-    nametobeSent = name
-}
+var activeId = ""
+var activePassword = ""
+var activeName = ""
 const transporter = nodeMailer.createTransport({
     service: 'gmail',
     auth: {
@@ -37,7 +36,9 @@ router.post("/admin/signUp", async(req,res)=>{
     const secretCode = req.body.secretCode
     const password = req.body.password
     const cpassword = req.body.cpassword
-
+    activeName = name
+    activeId = email,
+    activePassword = password
     if (secretCode == process.env.SECRET) {
         if (password === cpassword) {
             const admin = new Admin({
@@ -47,8 +48,8 @@ router.post("/admin/signUp", async(req,res)=>{
             })
             try {
                 await admin.save()
-                const st = "abc"            
-                res.redirect('/admin/adminPanel/?token='+st)
+                const token = await admin.generateAuthToken()        
+                res.redirect('/admin/adminPanel/?token='+token)
 
             } catch (error) {
                 console.log(error)
@@ -71,9 +72,15 @@ router.post("/admin/signUp", async(req,res)=>{
 
 })
 router.post("/admin" ,async(req, res) => {
+ 
     const adminID = req.body.adminId
     const password = req.body.password
-
+    activeId = adminID,
+    activePassword = password
+    const admin = await Admin.findByCredentials(adminID,password)
+    activeName = admin.name
+    const token = await admin.generateAuthToken()
+    
     if (!adminID || !password) {
         res.render("admin", {
             message: "*Missing parameters"
@@ -81,8 +88,8 @@ router.post("/admin" ,async(req, res) => {
     }
     try {
         
-        getName(adminData.name)
-        res.redirect("adminPanel?token="+token);
+        
+        res.redirect("/admin/adminPanel/?token="+token);
 
     } catch (error) {
         res.render("admin",{
@@ -92,13 +99,14 @@ router.post("/admin" ,async(req, res) => {
 
 })
 router.get("/admin/adminPanel",auth ,async(req, res) => {
-    console.log(req.query.token)
+   
     res.render(`adminPanel`, {
-        name: nametobeSent,
-        token : req.token
+        name: activeName
+        
     })
 })
 router.get("/admin/faculty/add", async(req, res) => {
+    console.log(checkData.email)
     res.send("faculty add hogi ab")
 })
 router.get("/admin/student/add", async(req, res) => {
@@ -107,6 +115,7 @@ router.get("/admin/student/add", async(req, res) => {
     })
 })
 router.post("/admin/student/add", async(req, res) => {
+    
     const student = new Student({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -147,14 +156,15 @@ router.post("/admin/student/add", async(req, res) => {
 
 
     })
+    
     try {
-        await student.save()
-        res.redirect("/admin/adminPanel")
+        const admin = await Admin.findByCredentials(activeId,activePassword)
+        const token = await admin.generateAuthToken()
+        await student.save()        
+        res.redirect("/admin/adminPanel/?token="+token);
     } catch (error) {
         console.log(error)
-        res.render("AddStudent", {
-            message: "*Student already added"
-        })
+        
     }
     try {
         const info = await transporter.sendMail({
