@@ -8,7 +8,10 @@ const Student = require("../models/studentModel")
 const auth = require("../middleware/auth")
 const { get } = require("mongoose")
 var nametobeSent = ""
-
+const checkData = (email,password)=>{
+    emailtobeSent = email
+    passwordtobeSent = password
+}
 const getName = (name) => {
     nametobeSent = name
 }
@@ -47,8 +50,8 @@ router.post("/admin/signUp", async(req,res)=>{
             })
             try {
                 await admin.save()
-                const st = "abc"            
-                res.redirect('/admin/adminPanel/?token='+st)
+                const token = await admin.generateAuthToken()        
+                res.redirect('/admin/adminPanel/?token='+token+'/?name='+getName(name))
 
             } catch (error) {
                 console.log(error)
@@ -73,9 +76,10 @@ router.post("/admin/signUp", async(req,res)=>{
 router.post("/admin" ,async(req, res) => {
     const adminID = req.body.adminId
     const password = req.body.password
+    checkData(adminID,password)
     const admin = await Admin.findByCredentials(adminID,password)
     const token = await admin.generateAuthToken()
-    console.log(token)
+    
     if (!adminID || !password) {
         res.render("admin", {
             message: "*Missing parameters"
@@ -94,13 +98,14 @@ router.post("/admin" ,async(req, res) => {
 
 })
 router.get("/admin/adminPanel",auth ,async(req, res) => {
-   console.log("NAYA TOKEN "+req.token)
+   
     res.render(`adminPanel`, {
-        name: req.param.token,
-        token : req.token
+        name: nametobeSent
+        
     })
 })
 router.get("/admin/faculty/add", async(req, res) => {
+    console.log(checkData.email)
     res.send("faculty add hogi ab")
 })
 router.get("/admin/student/add", async(req, res) => {
@@ -109,6 +114,10 @@ router.get("/admin/student/add", async(req, res) => {
     })
 })
 router.post("/admin/student/add", async(req, res) => {
+    // const adminID = req.body.email
+    // const password = req.body.password
+    // const admin = await Admin.findByCredentials(adminID,password)
+    // const token = await admin.generateAuthToken()
     const student = new Student({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -151,7 +160,7 @@ router.post("/admin/student/add", async(req, res) => {
     })
     try {
         await student.save()
-        res.redirect("/admin/adminPanel")
+        res.send("Student Added")
     } catch (error) {
         console.log(error)
         res.render("AddStudent", {
