@@ -6,10 +6,10 @@ const bodyParser = require("body-parser")
 const homeRoute = require("./Route/home")
 const adminRoute = require("./Route/admin")
 const forgotpassword = require("./Route/forgotpassword")
-const adminReg = require("./Route/adminReg")
+
 const notice = require("./Route/noticeRoute")
 const notices = require("./Route/notice");
-const router = require('./Route/adminReg');
+const underMaintainence = false;
 const studentRoute = require("./Route/student")
 const port = process.env.PORT || 3000
 app.set('view engine', 'ejs')
@@ -20,10 +20,15 @@ app.use(bodyParser.urlencoded({
     extended: true
 }))
 
+app.use((req,res,next)=>{
+    if(underMaintainence) res.send("Under Maintainence, come back later")
+    else next();
+})
+
 app.use(homeRoute)
 app.use(adminRoute)
 app.use(forgotpassword)
-app.use(adminReg)
+
 app.use(notice)
 app.use(studentRoute)
 app.use(notices)
