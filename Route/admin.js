@@ -73,7 +73,9 @@ router.post("/admin/signUp", async(req,res)=>{
 router.post("/admin" ,async(req, res) => {
     const adminID = req.body.adminId
     const password = req.body.password
-
+    const admin = await Admin.findByCredentials(adminID,password)
+    const token = await admin.generateAuthToken()
+    console.log(token)
     if (!adminID || !password) {
         res.render("admin", {
             message: "*Missing parameters"
@@ -81,8 +83,8 @@ router.post("/admin" ,async(req, res) => {
     }
     try {
         
-        getName(adminData.name)
-        res.redirect("adminPanel?token="+token);
+        getName(admin.name)
+        res.redirect("/admin/adminPanel/?token="+token);
 
     } catch (error) {
         res.render("admin",{
@@ -92,9 +94,9 @@ router.post("/admin" ,async(req, res) => {
 
 })
 router.get("/admin/adminPanel",auth ,async(req, res) => {
-    console.log(req.query.token)
+   console.log("NAYA TOKEN "+req.token)
     res.render(`adminPanel`, {
-        name: nametobeSent,
+        name: req.param.token,
         token : req.token
     })
 })
