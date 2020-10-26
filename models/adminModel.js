@@ -37,7 +37,7 @@ const adminSchema = new mongoose.Schema({
 
 adminSchema.methods.generateAuthToken = async function(){
      const admin = this
-     const token =  jwt.sign({email : admin.email},process.env.TEXT)
+     const token =  jwt.sign({email : admin.email},process.env.TEXT,{ expiresIn: "1h" })
      admin.tokens = admin.tokens.concat({token})
      await admin.save()
      return token;
