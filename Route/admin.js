@@ -5,9 +5,13 @@ const router = new express.Router()
 const Notice = require("../models/noticeModel")
 const Admin = require("../models/adminModel")
 const Student = require("../models/studentModel")
+const auth = require("../middleware/auth")
+const { get } = require("mongoose")
 var nametobeSent = ""
 
-
+const getName = (name) => {
+    nametobeSent = name
+}
 const transporter = nodeMailer.createTransport({
     service: 'gmail',
     auth: {
@@ -17,20 +21,58 @@ const transporter = nodeMailer.createTransport({
 });
 
 
-
-const getName = (name) => {
-    nametobeSent = name
-}
 router.get("/admin", (req, res) => {
     res.render("admin", {
         message: ""
     })
 })
+router.get("/admin/signUp",async (req,res)=>{
+    res.render("adminReg", {
+        message: ""
+    })
+})
+router.post("/admin/signUp", async(req,res)=>{
+    const name = req.body.name
+    const email = req.body.email
+    const secretCode = req.body.secretCode
+    const password = req.body.password
+    const cpassword = req.body.cpassword
 
-router.post("/admin", async(req, res) => {
+    if (secretCode == process.env.SECRET) {
+        if (password === cpassword) {
+            const admin = new Admin({
+                name: name,
+                email: email,
+                password: password
+            })
+            try {
+                await admin.save()
+                const st = "abc"            
+                res.redirect('/admin/adminPanel/?token='+st)
+
+            } catch (error) {
+                console.log(error)
+                res.render("adminReg", {
+                    message: "Account already Exist"
+                })
+            }
+
+        } else {
+            res.render("adminReg", {
+                message: "Password do not match"
+            })
+        }
+    } else {
+        res.render("adminReg", {
+            message: "Invalid Secret Code"
+        })
+    }
+
+
+})
+router.post("/admin" ,async(req, res) => {
     const adminID = req.body.adminId
     const password = req.body.password
-
 
     if (!adminID || !password) {
         res.render("admin", {
@@ -38,20 +80,22 @@ router.post("/admin", async(req, res) => {
         })
     }
     try {
-        const adminData = await Admin.findByCredentials(adminID, password)
+        
         getName(adminData.name)
-        res.redirect("admin/adminPanel")
+        res.redirect("adminPanel?token="+token);
 
     } catch (error) {
-        res.render("admin", {
-            message: error
+        res.render("admin",{
+            message : error
         })
     }
 
 })
-router.get("/admin/adminPanel", async(req, res) => {
-    res.render("adminPanel", {
-        name: nametobeSent
+router.get("/admin/adminPanel",auth ,async(req, res) => {
+    console.log(req.query.token)
+    res.render(`adminPanel`, {
+        name: nametobeSent,
+        token : req.token
     })
 })
 router.get("/admin/faculty/add", async(req, res) => {
@@ -119,7 +163,6 @@ router.post("/admin/student/add", async(req, res) => {
             subject: `${student.department} deparartment registration`,
 
             html: `<body>
-
             <h2>Your registration for ${student.academicSession} is sucssfull</h1>
             <div>
             

@@ -2,7 +2,7 @@ require("dotenv").config();
 const mongoose = require("mongoose")
 const bcrypt = require("bcryptjs")
 const validator = require("validator")
-
+const jwt = require("jsonwebtoken")
 const adminSchema = new mongoose.Schema({
     email: {
         type: String,
@@ -25,9 +25,24 @@ const adminSchema = new mongoose.Schema({
         type: String,
         required: true,
         trim: true
-    }
+    },
+    tokens : [{
+        token :{
+            type : String,
+            required : true
+        }
+    }]
 
 })
+
+adminSchema.methods.generateAuthToken = async function(){
+     const admin = this
+     const token =  jwt.sign({email : admin.email},process.env.TEXT)
+     admin.tokens = admin.tokens.concat({token})
+     await admin.save()
+     return token;
+
+}
 
 adminSchema.statics.findByCredentials = async(email, password) => {
     const admin = await Admin.findOne({ email })
