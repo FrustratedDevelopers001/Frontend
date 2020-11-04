@@ -114,6 +114,7 @@ router.get("/admin/student/add", async(req, res) => {
         message: ""
     })
 })
+
 router.post("/admin/student/add", async(req, res) => {
     
     const student = new Student({
@@ -219,5 +220,13 @@ router.post("/admin/student/add", async(req, res) => {
 
 
 })
+router.post('/admin/student/allStudent', async (req, res) => {
+  try {
+    const studentData = await Student.find({})
+    res.send(studentData)
+  } catch (error) {
+      res.status(400).send(error)
+  }
 
+});
 module.exports = router
