@@ -114,6 +114,7 @@ router.get("/admin/student/add", async(req, res) => {
         message: ""
     })
 })
+
 router.post("/admin/student/add", async(req, res) => {
     
     const student = new Student({
@@ -219,5 +220,27 @@ router.post("/admin/student/add", async(req, res) => {
 
 
 })
-
+router.get('/admin/student/allStudent', async (req, res) => {
+  try {
+    const studentData = await Student.find({});
+    res.render("StudentData",{
+        title : "Studnet List",
+        Students : studentData
+    })
+   
+    
+    //res.send(studentData);
+  } catch (error) {
+    res.status(400).send(error);
+  }
+});
+router.get("/admin/Student/:enrollment", async (req,res)=>{
+   try {
+       const SingleStudent = await Student.findOne({enrollment : req.params.enrollment})
+       res.send(SingleStudent)
+      
+   } catch (error) {
+       res.send("Error")
+   }
+})
 module.exports = router
